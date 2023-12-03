@@ -14,12 +14,15 @@ import java.util.*;
 
 public class SampleTree {
     
+    public static List<Integer> rootOfTree;
+    public static Integer userInput = 1;
 
     public static void main(String[] args) {
         //Creating a sample tree
         // Create a directed graph
+  
         Graph<Integer, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
-        List<Pair> childList = new ArrayList<>();
+        List<Pair<Integer, Integer>> childList = new ArrayList<>();
 
         //Add vertices and edges
         int r = 1;
@@ -55,7 +58,8 @@ public class SampleTree {
         graph.addEdge(r, child2);
         graph.addEdge(child2, child3);
         Pair<Integer, Integer> t1 = Pair.of(child2, child3);
-        childList.add(t1);
+        childList.add(Pair.of(child2, child3));
+        //childList.add(t1);
         graph.addEdge(child2, child4);
         Pair<Integer, Integer> t2 = Pair.of(child2, child4);
         childList.add(t2);
@@ -90,13 +94,15 @@ public class SampleTree {
         Pair<Integer, Integer> t12 = Pair.of(child12, child14);
         childList.add(t12);
 
-        System.out.println("Graph: " + graph);
+        System.out.println("Here is the graph, please enter the node you would like to find: " + graph);
+        Scanner scn = new Scanner(System.in);
+        userInput = scn.nextInt();
+  
         Graph<Integer, DefaultEdge> originalGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         originalGraph = graph;
         ArrayList<List<Integer>> result = Decomposition(graph, r);
-        Decomposition(graph, r);
-        buildPathTree(result, originalGraph);
-        //interleave(result, originalGraph);
+        Graph<List<Integer>, DefaultEdge> result2 = buildPathTree(result, originalGraph, r, childList);
+        interleave(result2, originalGraph);
     }
 
         public static ArrayList<List<Integer>> Decomposition(Graph<Integer, DefaultEdge> graph, int root)
@@ -109,6 +115,8 @@ public class SampleTree {
             //The specific paths are stored in the paths variable and iterated through
             //with the itr iterator
             Set<GraphWalk<Integer, DefaultEdge>> paths = decompPaths.getPaths();
+            System.out.print("The result of heavy path decompositon are these paths");
+            System.out.println(". Each path is seperated by a comma and an individual class is distinguished by opening and enclosing brackets " + paths);
             Iterator<GraphWalk<Integer, DefaultEdge>> itr = paths.iterator();
 
             //This 2D array holds all the heavy paths
@@ -127,7 +135,6 @@ public class SampleTree {
                 eachPath.add(i, nodes);
                 i += 1;
             }
-            
             //Notes
             /*eachPath Is a list of lists(integer)
             eachPath = [ [x..x], [x..x], [x..x]]
@@ -135,59 +142,59 @@ public class SampleTree {
             to get a specific element in the path
             loop through index via for (Integer element : eachPath.get(1))
             */
-            
-
-
                 List<Integer> element = eachPath.get(1);
-                //System.out.println("Here" + element);
-                //System.out.println(element.get(1));
-
             return eachPath;
         }
 
-        static void buildPathTree(ArrayList<List<Integer>> eachPath, Graph<Integer, DefaultEdge> originalGraph)
+        
+        static Graph<List<Integer>, DefaultEdge> buildPathTree(ArrayList<List<Integer>> eachPath, 
+        Graph<Integer, DefaultEdge> originalGraph, int root, List<Pair<Integer, Integer>> childList)
         {
-            //Find root
+            Graph<List<Integer>, DefaultEdge> pathTree = new DefaultDirectedGraph<>(DefaultEdge.class);
             for(int i=0; i < eachPath.size(); i++)
             {
-                for (Integer element : eachPath.get(i))
-                {
-                    
-                }
-
+                pathTree.addVertex(eachPath.get(i));
             }
 
-        }
+            Integer parent;
+            System.out.println("Building the heavy path tree");
+            for (List<Integer> vertex : pathTree.vertexSet()) {
+                for(int i =0; i < vertex.size(); i++) {
+                    for(Integer v : vertex) {
+                        for(int j=0; j < childList.size(); j++) {
+                            parent = childList.get(j).getKey();
+                            if(v == parent)
+                            {
+                               int value = childList.get(j).getValue();
+                               for (int k = 0; k < eachPath.size(); k++) {
+                                List<Integer> path = eachPath.get(k);
+                                if (path.contains(value) && (!vertex.contains(value)) && (!pathTree.containsEdge(vertex, path))) 
+                                {
+                                        pathTree.addEdge(vertex, path);
+                                        System.out.println("There is an edge between " + vertex + " and " + path);
+                                        break;
+                                    }
+                                }
+                            }
 
+                            }
+                        }
 
+                    }
+                }
+                System.out.println("The path tree is " + pathTree);
+                return pathTree;
+            }
 
-
-
-
-            //Graph<Object, DefaultEdge> pathTree = new DefaultDirectedGraph<>(DefaultEdge.class);
-            /*pathTree.addVertex(objarr[0]);
-            pathTree.addVertex(objarr[1]);
-            pathTree.addVertex(objarr[2]);
-            pathTree.addVertex(objarr[3]);
-            pathTree.addVertex(objarr[4]);
-            pathTree.addVertex(objarr[5]);
-            pathTree.addVertex(objarr[6]);
-
-            pathTree.addEdge(objarr[3], objarr[4]);
-            pathTree.addEdge(objarr[3], objarr[5]);
-            pathTree.addEdge(objarr[3], objarr[6]);
-            pathTree.addEdge(objarr[3], objarr[2]);
-            pathTree.addEdge(objarr[2], objarr[1]);
-            pathTree.addEdge(objarr[1], objarr[0]);
-
-            System.out.println("Path tree: " + pathTree);
-            return pathTree;*/
-
-
-        public static void interleave(Graph<Object, DefaultEdge> pathTree, Graph<Integer, 
+        public static void interleave(Graph<List<Integer>, DefaultEdge> pathTre, Graph<Integer, 
         DefaultEdge> graph)
         {
-            System.out.println("Original graph" + graph);
+            int targetNode = userInput;
+
+            //System.out.println("Original graph" + graph);
+            //navigate in Path tree
+            //pi = root
+
         }
 }
 
