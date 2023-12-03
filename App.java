@@ -24,32 +24,51 @@ public class App {
         // default initialized with "root" as the root
         DFS myGraph = new DFS(jsonEntries.size());
 
-        Iterator<Entry> test = jsonEntries.iterator();
-        while (test.hasNext()) {
-            Entry e = test.next();
+        Iterator<Entry> jsonItr = jsonEntries.iterator();
+        while (jsonItr.hasNext()) {
+            Entry e = jsonItr.next();
             List<List<String>> categories = e.getCategories();
 
+            // getting a title's list of every list of categories it is assigned to
             ListIterator<List<String>> outerItr = categories.listIterator();
+
             while (outerItr.hasNext()) {
+                // getting each sub-list
                 List<String> listofCats = outerItr.next();
-                ListIterator<String> innerItr = listofCats.listIterator();
+                // starts at 1 to avoid the root
+                ListIterator<String> innerItr = listofCats.listIterator(1);
 
-                // need to check if edge already exists every time before adding
-                myGraph.addVertex("root", listofCats.get(0));
-                int counter = 1;
-                while (innerItr.hasNext()) {
-                    String c = innerItr.next();
-                    int nextIndex = innerItr.nextIndex();
-
-                    if (nextIndex != listofCats.size()) {
-                        myGraph.addVertex(c, listofCats.get(nextIndex));
-                        counter++;
+                if (!"".equals(listofCats.get(0))) {
+                    // check if edge already exists is done in addVertex
+                    // don't want to duplicate a category in list of outgoing neighbors
+                    if (!myGraph.hasPath("root", listofCats.get(0))) {
+                        myGraph.addVertex("root", listofCats.get(0));
+                        myGraph.addLeafDepth(0, listofCats.get(0));
                     }
-                    // leaf of every entry is the title ?
-                    else {
-                        myGraph.addVertex(c, e.getTitle());
-                        counter++;
-                        myGraph.addLeaf(counter, e.getTitle());
+                    // categories of length = 1
+                    if (!innerItr.hasNext()) {
+                        myGraph.addVertex(listofCats.get(0), e.getTitle());
+                        myGraph.addLeafDepth(1, e.getTitle());
+                    }
+                    int counter = 1;
+                    while (innerItr.hasNext()) {
+                        String c = innerItr.next();
+
+                        // checking if it is not a leaf node
+                        if (innerItr.hasNext()) {
+                            // don't want to duplicate a category in list of outgoing neighbors
+                            if (!myGraph.hasPath(c, listofCats.get(innerItr.nextIndex()))) {
+                                myGraph.addVertex(c, listofCats.get(innerItr.nextIndex()));
+                                counter++;
+                            }
+                        }
+                        // leaf of every entry is the title
+                        else {
+                            myGraph.addVertex(c, e.getTitle());
+                            myGraph.addVertex(e.getTitle(), null);
+                            counter++;
+                            myGraph.addLeafDepth(counter, e.getTitle());
+                        }
                     }
                 }
             }
