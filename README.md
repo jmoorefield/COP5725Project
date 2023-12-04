@@ -1,5 +1,5 @@
 # Interactive Graph Search
-Our term project for COP5725: Advanced Databases
+Our term project for COP5725: Advanced Databases  
 Group Members: Sydney McGinnis and Jess Moorefield  
 
 Required Files: 
