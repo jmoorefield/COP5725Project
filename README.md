@@ -43,8 +43,9 @@ To add the libraries, follow the steps below.
 To Run the Code:
 -------------------
 ```
-Download the igs.jar
-Run the igs.jar
+Download all files from the GitHub
+Ensure that the prerequisites are met
+Run App.java, SampleOrderedInterleave.java, InterleaveWithData.java
 ```
 
 Distribution of Work:
