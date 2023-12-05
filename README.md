@@ -46,12 +46,21 @@ To Run the Code:
 Download all files from the GitHub
 Ensure that the prerequisites are met
 Run App.java, SampleOrderedInterleave.java, InterleaveWithData.java
+
+To generate the metadata_simplified.json file run the preprocess_json.py
 ```
 
 Distribution of Work:
 ---------------------    
-Jess - DFS Heavy Path tree and DFS Interleave algorithm, parsing dataset JSON input, experimental results, colloaborated with Jess on all papers related to the project
+Jess - DFS Heavy Path tree and DFS Interleave algorithm, parsing dataset JSON input, experimental results, collaborated with Jess on all papers related to the project
 
-Sydney - Heavy Path Decomposition and Ordered Interleave algorithm, experimental results, colloaborated with Jess on all papers related to the project 
+Sydney - Heavy Path Decomposition and Ordered Interleave algorithm, created the bar graph, collaborated with Jess on all papers related to the project  
+
+External Resources:
+---------------------
+[GSON](https://mvnrepository.com/artifact/com.google.code.gson/gson/2.10.1)
+[JGraphT](https://sourceforge.net/projects/jgrapht/ ) 
+preprocess_json.py was modified using [this](https://colab.research.google.com/drive/1Zv6MARGQcrBbLHyjPVVMZVnRWsRnVMpV) code
+[Amazon dataset](https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html)
 
 
