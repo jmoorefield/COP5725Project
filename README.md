@@ -1,5 +1,5 @@
 # Interactive Graph Search
-Our term project for COP5725: Advanced Databases  
+Our term project for COP5725: Advanced Database Systems  
 Group Members: Sydney McGinnis and Jess Moorefield  
 
 Required Files: 
@@ -9,10 +9,13 @@ INPUT FILES HERE
 Prerequisites: 
 ---------------------  
 ```
-Working version of Java, Visual Studio Code, and JGraphT:  
-JGraphT is needed for creating the graphs, traversing them, and heavy path decomposition. To download, follow the steps below.  
-1. JGraphT can be downloaded here: https://sourceforge.net/projects/jgrapht/ or it can be downloaded from our repository in the file titled jgrapht.jar.zip
-2. Unzip the jar in your desired directory
+Working version of Java, Visual Studio Code, and JGraphT and GSON libraries:  
+JGraphT is needed for creating the graphs, traversing them, and heavy path decomposition. GSON is needed for JSON processing. Both are available in this repository in .jar format, and you may also download them with these links:
+GSON : https://mvnrepository.com/artifact/com.google.code.gson/gson/2.10.1
+JGraphT : https://sourceforge.net/projects/jgrapht/
+
+To add the libraries, follow the steps below.  
+2. Add the jars to your desired directory
 3. Open Visual Studio Code
 4. Navigate to the "Extensions" tab within Visual Studio Code
 5. Type in "Project manager for Java" in the search bar
@@ -32,7 +35,7 @@ We use the dataset Amazon Dataset which can in our GitHub repository in the file
 
 Distribution of Work for the Code:
 ---------------------    
-Jess
+Jess - DFS Heavy Path tree and DFS Interleave algorithm, parsing JSON input, experimental results 
 
 Sydney    
 
