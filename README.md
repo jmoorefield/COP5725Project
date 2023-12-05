@@ -50,9 +50,9 @@ To Run the Code:
 ```
 Download all files from the GitHub
 Ensure that the prerequisites are met
+Update the path to the metadata file on your machine
 Run App.java, SampleOrderedInterleave.java, InterleaveWithData.java
 
-To generate the metadata_simplified.json file run the preprocess_json.py (adjust to be the paths of the files on your machine)
 ```
 
 Distribution of Work:
