@@ -40,6 +40,13 @@ To add the libraries, follow the steps below.
 18. Now, the jars file jgrapht-core-1.5.2 and gson-2.10.1 will be added to the runtime settings
 ```
 
+To Run the Code:
+-------------------
+```
+Download the igs.jar
+Run the igs.jar
+```
+
 Distribution of Work for the Code:
 ---------------------    
 Jess - DFS Heavy Path tree and DFS Interleave algorithm, parsing dataset JSON input, experimental results, colloaborated with Jess on all papers related to the project
