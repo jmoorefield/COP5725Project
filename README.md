@@ -14,12 +14,13 @@ Prerequisites:
 ---------------------  
 ```
 Working version of Java, Visual Studio Code, and JGraphT and GSON libraries:  
-JGraphT is needed for creating the graphs, traversing them, and heavy path decomposition. GSON is needed for JSON processing. Both are available in this repository in .jar format, and you may also download them with these links:
+JGraphT is needed for creating the graphs, traversing them, and heavy path decomposition. GSON is needed for JSON processing.
+Both are available in this repository in .jar format, and you may also download them with these links:
 GSON : https://mvnrepository.com/artifact/com.google.code.gson/gson/2.10.1
 JGraphT : https://sourceforge.net/projects/jgrapht/
 
 To add the libraries, follow the steps below.  
-2. Add the jars to your desired directory
+2. Add the jars to your desired directory (and unzip the JGraphT zip file) 
 3. Open Visual Studio Code
 4. Navigate to the "Extensions" tab within Visual Studio Code
 5. Type in "Project manager for Java" in the search bar
@@ -35,8 +36,6 @@ To add the libraries, follow the steps below.
 15. Add the GSON jar to the "Referenced Libraries" folder
 15. Now, the jars file jgrapht-core-1.5.2 and gson-2.10.1 will be added to the runtime settings
 ```
-
-We use the dataset Amazon Dataset which can in our GitHub repository in the file titled: metadata.json   
 
 Distribution of Work for the Code:
 ---------------------    
