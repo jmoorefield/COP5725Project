@@ -15,33 +15,27 @@ import com.google.gson.reflect.TypeToken;
 
 public class App {
 
-    public static void avgOutDegree(DFS dfsGraph, SampleTree oiGraph) {
-        System.out.println("Depth vs. Average Out-Degree");
-        System.out.println("----------------------------");
+    public static void avgOutDegree(DFS myGraph) {
+        System.out.println("Depth vs. Average Out-Degree (Number of Children)");
+        System.out.println("------------------------------------------------");
 
-        Iterator<Map.Entry<Integer, ArrayList<String>>> itr = dfsGraph.getLeavesDepth().entrySet().iterator();
+        Iterator<Map.Entry<Integer, ArrayList<String>>> itr = myGraph.getLeavesDepth().entrySet().iterator();
         while (itr.hasNext()) {
             double numNodes = 0.0;
-            Map.Entry<Integer, ArrayList<String>> entry = itr.next();
+            Map.Entry<Integer, ArrayList<String>> entry = itr.next(); // current depth
+            Iterator<String> leaves = entry.getValue().iterator(); // leaves of the current depth
 
-            Iterator<String> leaves = entry.getValue().iterator();
             while (leaves.hasNext()) {
-                String l = leaves.next();
-                numNodes += oiGraph.map.get(l).size();
+                String lf = leaves.next();
+                // need the number of children
+                numNodes += myGraph.getNumChildren(lf);
             }
-            double avg = (numNodes / entry.getKey());
+            double avg = (numNodes / entry.getValue().size());
             System.out.println(entry.getKey() + " | " + avg);
         }
     }
 
-    public static String getRandomTarget(DFS graph) {
-        List<String> listofNodes = new ArrayList<String>(graph.getNodes());
-        listofNodes.remove("*"); // do not set root to target node
-        Random r = new Random();
-        return listofNodes.get(r.nextInt(listofNodes.size()));
-    }
-
-    public static void getNumNodesStats(Map<Integer, ArrayList<String>> l) {
+    public static void numNodesByDepth(Map<Integer, ArrayList<String>> l) {
         System.out.println("Depth vs. Number of Nodes");
         System.out.println("----------------------------");
 
@@ -49,6 +43,63 @@ public class App {
         while (itr.hasNext()) {
             Map.Entry<Integer, ArrayList<String>> entry = itr.next();
             System.out.println(entry.getKey() + " | " + entry.getValue().size());
+        }
+    }
+
+    public static void runForAllDepths(DFS myGraph, ArrayList<String> ordering, List<Entry> jsonEntries) {
+        // array to hold the average number of questions for leaves at each depth
+        double[] avgNumQuestions = new double[myGraph.getLeavesDepth().size()];
+
+        // traverse over all depths
+        Iterator<Map.Entry<Integer, ArrayList<String>>> itr = myGraph.getLeavesDepth().entrySet().iterator();
+        int index = 0;
+        while (itr.hasNext()) {
+            int numQuestions = 0;
+            Map.Entry<Integer, ArrayList<String>> entry = itr.next();
+            // if the list of leaves is small enough, just iterate over every leaf at the
+            // current depth
+
+            if (entry.getKey() != 0) {
+                if (entry.getValue().size() < 10) {
+                    Iterator<String> leafItr = entry.getValue().iterator();
+                    while (leafItr.hasNext()) {
+                        String target = leafItr.next();
+                        myGraph.setTarget(target);
+
+                        System.out.println("Depth : " + entry.getKey());
+                        System.out.println("The target is node " + target);
+                        showTargetPath(jsonEntries, target);
+
+                        numQuestions += myGraph.dfsInterleave(ordering, target);
+                    }
+                }
+
+                else {
+                    // randomly select 10 leaves
+                    for (int i = 0; i < 10; i++) {
+                        Random r = new Random();
+                        List<String> listofNodes = new ArrayList<String>(entry.getValue());
+
+                        String randomTarget = listofNodes.get(r.nextInt(listofNodes.size()));
+                        myGraph.setTarget(randomTarget);
+
+                        System.out.println("The target is node " + randomTarget);
+                        showTargetPath(jsonEntries, randomTarget);
+
+                        myGraph.dfsInterleave(ordering, randomTarget);
+
+                    }
+                }
+                avgNumQuestions[index] = (numQuestions / entry.getValue().size());
+                index++;
+            }
+        }
+
+        System.out.println("Depth vs. Avg. Number of Questions");
+        System.out.println("----------------------------");
+
+        for (int j = 0; j < avgNumQuestions.length; j++) {
+            System.out.println(j + " | " + avgNumQuestions[j]);
         }
     }
 
@@ -122,12 +173,25 @@ public class App {
         return myGraph;
     }
 
+    public static void showTargetPath(List<Entry> jsonEntries, String target) {
+        List<List<String>> path = new ArrayList<List<String>>();
+
+        // get path to target node
+        Iterator<Entry> jsonItr2 = jsonEntries.iterator();
+        while (jsonItr2.hasNext()) {
+            Entry e = jsonItr2.next();
+            if (e.getTitle().equals(target)) {
+                path = e.getCategories();
+                break;
+            }
+        }
+        System.out.println("The path(s) to the target node (from the root) are : ");
+        System.out.println(path);
+    }
+
     public static void main(String[] args) throws IOException {
-
-        SampleTree s;
-
         // read in .JSON dataset file
-        String dataPath = "/Users/jess/IGSProject/data/metadata_simplified.json";
+        String dataPath = "/Users/jess/IGSProject/data/metadata.json";
         BufferedReader reader = new BufferedReader(new FileReader(dataPath));
         List<Entry> jsonEntries = new Gson().fromJson(reader, new TypeToken<List<Entry>>() {
         }.getType());
@@ -142,49 +206,18 @@ public class App {
         // default initialized with "*" as the root
         DFS myGraph = buildGraph(new DFS(jsonEntries.size()), jsonItr);
 
-        // randomly selecting a target node
-        String target = "Adult Ballet Tutu Cheetah Pink";
-        // String target = getRandomTarget(myGraph);
-        myGraph.setTarget(target);
-        System.out.println("The target is node " + target);
-        List<List<String>> path = new ArrayList<List<String>>();
-
-        // get path to target node
-        Iterator<Entry> jsonItr2 = jsonEntries.iterator();
-        while (jsonItr2.hasNext()) {
-            Entry e = jsonItr2.next();
-            if (e.getTitle().equals(target)) {
-                path = e.getCategories();
-                break;
-            }
-        }
-        System.out.println("The path(s) to the target node are : ");
-        System.out.println(path);
-
+        // get heavy path tree traversal order
         ArrayList<String> ordering = myGraph.buildHeavyPathDFSTree();
 
-        // change getNodes to be list of randomly selected nodes
-        // List<String> listofNodes = new ArrayList<String>(myGraph.getNodes());
-        // Iterator<String> nItr = listofNodes.iterator();
+        // runForAllDepths(myGraph, ordering, jsonEntries);
+        String target = "Adult Ballet Tutu Yellow";
+        System.out.println("The target is node " + target);
+        showTargetPath(jsonEntries, target);
 
-        myGraph.dfsInterleave(ordering, target);
+        myGraph.setTarget(target);
+        int numQuestions = myGraph.dfsInterleave(ordering, target);
 
-        /*
-         * while (nItr.hasNext()) {
-         * String t = nItr.next();
-         * int depth = myGraph.getLeafDepth(t);
-         * 
-         * System.out.println("number of questions is " + myGraph.getNumQuestions());
-         * myGraph.dfsInterleave(ordering, t);
-         * 
-         * // then for every depth, get the size of its leaves list, and divide
-         * summation
-         * // by that size
-         * 
-         * }
-         */
-        // Print results statistics
-        // getNumNodesStats(myGraph.getLeavesDepth());
-        // avgOutDegree(myGraph, s);
+        numNodesByDepth(myGraph.getLeavesDepth());
+        avgOutDegree(myGraph);
     }
 }

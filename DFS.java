@@ -107,6 +107,7 @@ public class DFS {
     }
 
     public void printGraph() {
+        // get all nodes : ArrayList<String>(map.keySet());
         Iterator<Map.Entry<String, ArrayList<String>>> itr = map.entrySet().iterator();
 
         while (itr.hasNext()) {
@@ -119,8 +120,8 @@ public class DFS {
         return leavesByDepth;
     }
 
-    public ArrayList<String> getNodes() {
-        return new ArrayList<String>(map.keySet());
+    public int getNumChildren(String leaf) {
+        return map.get(leaf).size();
     }
 
     boolean isLeaf(String vertex) {
@@ -147,7 +148,7 @@ public class DFS {
         return rootToLeafPath;
     }
 
-    public void dfsInterleave(ArrayList<String> ordering, String target) {
+    public int dfsInterleave(ArrayList<String> ordering, String target) {
         boolean found = false;
         String currentNode = this.root;
         this.numQuestions = 0;
@@ -159,11 +160,10 @@ public class DFS {
             // this means our target node was a leaf
             if (deepestChild.equals("DNE")) {
                 System.out.println("Found! Number of questions asked: " + getNumQuestions());
-                return; // terminate because we have found node
+                return numQuestions; // terminate because we have found node
             }
 
             String node = leftMostChild(deepestChild);
-
             // this means there is no child of node that can reach the target
             // i.e., it must be the target
             if (node.equals("DNE")) {
@@ -172,6 +172,7 @@ public class DFS {
             }
             currentNode = node;
         }
+        return numQuestions;
     }
 
     public String deepestChild(ArrayList<String> path) {
