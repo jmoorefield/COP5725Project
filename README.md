@@ -57,7 +57,7 @@ To generate the metadata_simplified.json file run the preprocess_json.py
 
 Distribution of Work:
 ---------------------    
-Jess - DFS Heavy Path tree and DFS Interleave algorithm, parsing dataset JSON input, experimental results, collaborated with Jess on all papers related to the project
+Jess - DFS Heavy Path tree and DFS Interleave algorithm, parsing dataset JSON input, experimental results, collaborated with Sydney on all papers related to the project
 
 Sydney - Heavy Path Decomposition and Ordered Interleave algorithm, created the bar graph, collaborated with Jess on all papers related to the project  
 
