@@ -2,6 +2,7 @@ package IGS;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Stack;
 import java.util.Iterator;
 import java.util.List;
@@ -13,18 +14,32 @@ import java.util.ListIterator;
 public class DFS {
     Map<String, ArrayList<String>> map;
     int size;
+    int numQuestions;
     String root;
+    String target;
     Map<String, Boolean> visited;
+    Map<String, Boolean> dfsInterleaveVisited;
     Map<Integer, ArrayList<String>> leavesByDepth;
 
     DFS(int size) {
         this.size = size;
         this.root = "*";
+        this.numQuestions = 0;
+        this.target = "";
         map = new HashMap<String, ArrayList<String>>();
         leavesByDepth = new HashMap<Integer, ArrayList<String>>();
 
         // initially seeting all vertices to visited = false
         visited = new HashMap<String, Boolean>();
+        dfsInterleaveVisited = new HashMap<String, Boolean>();
+    }
+
+    public void setTarget(String v) {
+        this.target = v;
+    }
+
+    public int getNumQuestions() {
+        return this.numQuestions;
     }
 
     public void addVertex(String v, String newVertex) {
@@ -37,6 +52,7 @@ public class DFS {
             }
             map.put(v, adj);
             visited.put(v, false);
+            dfsInterleaveVisited.put(v, false);
         } else {
             if (!isLeaf(v)) {
                 map.get(v).add(newVertex);
@@ -72,6 +88,17 @@ public class DFS {
         }
     }
 
+    public int getLeafDepth(String leaf) {
+        Iterator<Map.Entry<Integer, ArrayList<String>>> itr = leavesByDepth.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<Integer, ArrayList<String>> entry = itr.next();
+            if (entry.getValue().contains(leaf)) {
+                return entry.getKey();
+            }
+        }
+        return -1;
+    }
+
     public boolean inLeafDepth(int depth, String leaf) {
         if (leavesByDepth.containsKey((depth)) && leavesByDepth.get(depth).contains(leaf)) {
             return true;
@@ -98,7 +125,6 @@ public class DFS {
 
     boolean isLeaf(String vertex) {
         // if list of out neighbors is empty
-        // System.out.println(map.get(vertex).isEmpty());
         if (map.get(vertex).isEmpty()) {
             return true;
         }
@@ -106,32 +132,75 @@ public class DFS {
     }
 
     // for DFS-interleave algorithm
-    public ArrayList<String> findLeaf(String vertex, Map<String, Boolean> visited) {
+    public ArrayList<String> findLeafPath(String root, ArrayList<String> ordering) {
         ArrayList<String> rootToLeafPath = new ArrayList<String>();
 
-        Stack<String> stack = new Stack<>();
-        stack.push(vertex);
-        rootToLeafPath.add(vertex);
-        System.out.println("pushing in findLeaf" + vertex);
-
-        while (stack.empty() == false) {
-            vertex = stack.pop();
-            visited.put(vertex, true);
+        // start looking in path at this current 'root'
+        for (int index = ordering.indexOf(root); index < ordering.size(); index++) {
+            String vertex = ordering.get(index); // current node
             rootToLeafPath.add(vertex);
-
+            dfsInterleaveVisited.put(vertex, true);
             if (isLeaf(vertex)) {
-                return rootToLeafPath;
-            } else {
-                if (!visited.get(vertex)) {
-                    stack.push(vertex);
-                }
+                break;
             }
         }
-        return null;
+        return rootToLeafPath;
     }
 
-    public void dfsInterleave(ArrayList<String> ordering) {
-        System.out.println("hello world!");
+    public void dfsInterleave(ArrayList<String> ordering, String target) {
+        boolean found = false;
+        String currentNode = this.root;
+        this.numQuestions = 0;
+
+        while (!found) {
+            ArrayList<String> path = findLeafPath(currentNode, ordering); // leftmost currentNode-to-leaf path
+            String deepestChild = deepestChild(path);
+
+            // this means our target node was a leaf
+            if (deepestChild.equals("DNE")) {
+                System.out.println("Found! Number of questions asked: " + getNumQuestions());
+                return; // terminate because we have found node
+            }
+
+            String node = leftMostChild(deepestChild);
+
+            // this means there is no child of node that can reach the target
+            // i.e., it must be the target
+            if (node.equals("DNE")) {
+                found = true; // terminate because we have found node
+                System.out.println("Found! Number of questions asked: " + getNumQuestions());
+            }
+            currentNode = node;
+        }
+    }
+
+    public String deepestChild(ArrayList<String> path) {
+        boolean keepGoing = false;
+        String nextNode = "DNE";
+
+        for (int i = 1; i < path.size(); i++) {
+            keepGoing = reach(path.get(i), target);
+            // backtrack if it reaches false
+            if (keepGoing == false) {
+                nextNode = path.get(i - 1);
+                break;
+            }
+        }
+        return nextNode;
+    }
+
+    public String leftMostChild(String node) {
+        ArrayList<String> children = map.get(node);
+        Iterator<String> itr = children.listIterator();
+
+        while (itr.hasNext()) {
+            String v = itr.next();
+            if (!dfsInterleaveVisited.get(v)) {
+                if (reach(v, target))
+                    return v;
+            }
+        }
+        return "DNE";
     }
 
     // s = start vertex
@@ -147,9 +216,6 @@ public class DFS {
             String s = stack.pop();
             visited.put(s, true);
             finalOrdering.add(s);
-
-            // Collections.sort(map.get(s), Collections.reverseOrder()); - used for first
-            // example in original paper instead of using heavy-path sort criteria
 
             // if node at top of stack is not a leaf
             if (!map.get(s).isEmpty()) {
@@ -195,9 +261,13 @@ public class DFS {
         return outreaching;
     }
 
+    // note that this has been modified to search only 2 levels of children down,
+    // not all the way to the leaf nodes
+    // recursive method to search down to the leaf caused stack overflow error due
+    // to size of dataset
     public int calculateDepth(String v) {
         int depth = 0;
-        Iterator<String> itr = map.get(v).listIterator();
+        Iterator<String> itr = map.get(v).listIterator(); // get children of current node
         while (itr.hasNext()) {
             String current = itr.next();
             if (!visited.get(current)) {
@@ -210,6 +280,20 @@ public class DFS {
             }
         }
         return depth;
+    }
+
+    public boolean reach(String node, String target) {
+        System.out.println("Can " + node + " reach " + target + "?");
+        System.out.println("Usage: YES or Y; NO or N");
+
+        Scanner scn = new Scanner(System.in);
+        String answer = scn.nextLine().toUpperCase();
+        numQuestions++;
+
+        if (("YES".equals(answer)) || ("Y".equals(answer))) {
+            return true;
+        } else
+            return false;
     }
 }
 // doesn't work on large scale (stack overflow)

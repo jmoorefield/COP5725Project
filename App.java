@@ -13,8 +13,26 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-// TODO: change to 24,329 nodes 
 public class App {
+
+    public static void avgOutDegree(DFS dfsGraph, SampleTree oiGraph) {
+        System.out.println("Depth vs. Average Out-Degree");
+        System.out.println("----------------------------");
+
+        Iterator<Map.Entry<Integer, ArrayList<String>>> itr = dfsGraph.getLeavesDepth().entrySet().iterator();
+        while (itr.hasNext()) {
+            double numNodes = 0.0;
+            Map.Entry<Integer, ArrayList<String>> entry = itr.next();
+
+            Iterator<String> leaves = entry.getValue().iterator();
+            while (leaves.hasNext()) {
+                String l = leaves.next();
+                numNodes += oiGraph.map.get(l).size();
+            }
+            double avg = (numNodes / entry.getKey());
+            System.out.println(entry.getKey() + " | " + avg);
+        }
+    }
 
     public static String getRandomTarget(DFS graph) {
         List<String> listofNodes = new ArrayList<String>(graph.getNodes());
@@ -23,18 +41,13 @@ public class App {
         return listofNodes.get(r.nextInt(listofNodes.size()));
     }
 
-    // may be easier to do with sydney's implementation?
-    public static void getOutDegreeStats(Map<Integer, ArrayList<String>> l) {
+    public static void getNumNodesStats(Map<Integer, ArrayList<String>> l) {
         System.out.println("Depth vs. Number of Nodes");
         System.out.println("----------------------------");
 
         Iterator<Map.Entry<Integer, ArrayList<String>>> itr = l.entrySet().iterator();
         while (itr.hasNext()) {
             Map.Entry<Integer, ArrayList<String>> entry = itr.next();
-
-            // gets all of the leaves at a depth
-            ArrayList<String> n = entry.getValue();
-
             System.out.println(entry.getKey() + " | " + entry.getValue().size());
         }
     }
@@ -107,10 +120,11 @@ public class App {
             }
         }
         return myGraph;
-
     }
 
     public static void main(String[] args) throws IOException {
+
+        SampleTree s;
 
         // read in .JSON dataset file
         String dataPath = "/Users/jess/IGSProject/data/metadata_simplified.json";
@@ -129,11 +143,13 @@ public class App {
         DFS myGraph = buildGraph(new DFS(jsonEntries.size()), jsonItr);
 
         // randomly selecting a target node
-        // String target = "Adult Ballet Tutu Cheetah Pink";
-        String target = getRandomTarget(myGraph);
+        String target = "Adult Ballet Tutu Cheetah Pink";
+        // String target = getRandomTarget(myGraph);
+        myGraph.setTarget(target);
         System.out.println("The target is node " + target);
         List<List<String>> path = new ArrayList<List<String>>();
 
+        // get path to target node
         Iterator<Entry> jsonItr2 = jsonEntries.iterator();
         while (jsonItr2.hasNext()) {
             Entry e = jsonItr2.next();
@@ -145,22 +161,30 @@ public class App {
         System.out.println("The path(s) to the target node are : ");
         System.out.println(path);
 
-        // System.out.println(myGraph.getLeavesDepth());
-        // System.out.println(jsonEntries.size());
-        // getOutDegreeStats(myGraph.getLeavesDepth());
+        ArrayList<String> ordering = myGraph.buildHeavyPathDFSTree();
 
-        // System.out.println(myGraph.buildHeavyPathDFSTree());
+        // change getNodes to be list of randomly selected nodes
+        // List<String> listofNodes = new ArrayList<String>(myGraph.getNodes());
+        // Iterator<String> nItr = listofNodes.iterator();
 
-        // will need to call dfsinterleave for every node in order to get the node
-        // depth vs questions asked result
+        myGraph.dfsInterleave(ordering, target);
 
-        // List<String> listofNodes = new ArrayList<String>(graph.getNodes());
-        // for every node in list, set as target
-        // get depth of node
-        // do dfs interleave = returns number of questions
-        // store result as depth: total number of questions (summation)
-        // then for every depth, get the size of its leaves list, and divide summation
-        // by that size
+        /*
+         * while (nItr.hasNext()) {
+         * String t = nItr.next();
+         * int depth = myGraph.getLeafDepth(t);
+         * 
+         * System.out.println("number of questions is " + myGraph.getNumQuestions());
+         * myGraph.dfsInterleave(ordering, t);
+         * 
+         * // then for every depth, get the size of its leaves list, and divide
+         * summation
+         * // by that size
+         * 
+         * }
+         */
+        // Print results statistics
+        // getNumNodesStats(myGraph.getLeavesDepth());
+        // avgOutDegree(myGraph, s);
     }
-
 }
