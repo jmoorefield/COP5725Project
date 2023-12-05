@@ -47,7 +47,7 @@ Download the igs.jar
 Run the igs.jar
 ```
 
-Distribution of Work for the Code:
+Distribution of Work:
 ---------------------    
 Jess - DFS Heavy Path tree and DFS Interleave algorithm, parsing dataset JSON input, experimental results, colloaborated with Jess on all papers related to the project
 
