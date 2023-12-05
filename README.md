@@ -58,9 +58,9 @@ Sydney - Heavy Path Decomposition and Ordered Interleave algorithm, created the 
 
 External Resources:
 ---------------------
-[GSON](https://mvnrepository.com/artifact/com.google.code.gson/gson/2.10.1)
-[JGraphT](https://sourceforge.net/projects/jgrapht/ ) 
-preprocess_json.py was modified using [this](https://colab.research.google.com/drive/1Zv6MARGQcrBbLHyjPVVMZVnRWsRnVMpV) code
-[Amazon dataset](https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html)
+[GSON](https://mvnrepository.com/artifact/com.google.code.gson/gson/2.10.1)  
+[JGraphT](https://sourceforge.net/projects/jgrapht/ )   
+preprocess_json.py was modified using [this](https://colab.research.google.com/drive/1Zv6MARGQcrBbLHyjPVVMZVnRWsRnVMpV) code  
+[Amazon dataset](https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html)  
 
 
