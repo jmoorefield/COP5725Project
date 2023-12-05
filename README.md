@@ -5,10 +5,10 @@ Group Members: Sydney McGinnis and Jess Moorefield
 Required Files: 
 ---------------------  
 App.Java - driver file 
-Entry.Java - class to represent a JSON entry in the dataset
+Entry.Java - class to represent a JSON entry in the dataset  
 DFS.Java - DFS Heavy Path Tree and DFS Interleave functionality 
-OrderedInterleave.Java - Heavy path decomposition and Ordered Interleave functionality
-metadata.json - Amazon dataset, with modifications detailed in our final report
+OrderedInterleave.Java - Heavy path decomposition and Ordered Interleave functionality  
+metadata.json - Amazon dataset, with modifications detailed in our final report   
 
 Prerequisites: 
 ---------------------  
