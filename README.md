@@ -4,11 +4,11 @@ Group Members: Sydney McGinnis and Jess Moorefield
 
 Required Files: 
 ---------------------  
-App.Java - driver file 
-Entry.Java - class to represent a JSON entry in the dataset  
-DFS.Java - DFS Heavy Path Tree and DFS Interleave functionality 
-OrderedInterleave.Java - Heavy path decomposition and Ordered Interleave functionality  
-metadata.json - Amazon dataset, with modifications detailed in our final report   
+App.Java - driver file   
+Entry.Java - class to represent a JSON entry in the dataset    
+DFS.Java - DFS Heavy Path Tree and DFS Interleave functionality   
+OrderedInterleave.Java - Heavy path decomposition and Ordered Interleave functionality    
+metadata.json - Amazon dataset, with modifications detailed in our final report     
 
 Prerequisites: 
 ---------------------  
@@ -33,14 +33,17 @@ To add the libraries, follow the steps below.
 12. Navigate to the directory where the zipped jar file was unzipped
 13. Within the unzipped folder navigate to jgrapht-1.5.2 > lib > jgrapht-core-1.5.2
 14. Add this file to the "Referenced Libraries" folder
+15. Again, click the plus "+" button in Referenced Libraries
+16. Navigate to where your GSON jar is stored
+17. Add this to your referenced libraries
 15. Add the GSON jar to the "Referenced Libraries" folder
-15. Now, the jars file jgrapht-core-1.5.2 and gson-2.10.1 will be added to the runtime settings
+18. Now, the jars file jgrapht-core-1.5.2 and gson-2.10.1 will be added to the runtime settings
 ```
 
 Distribution of Work for the Code:
 ---------------------    
-Jess - DFS Heavy Path tree and DFS Interleave algorithm, parsing dataset JSON input, experimental results 
+Jess - DFS Heavy Path tree and DFS Interleave algorithm, parsing dataset JSON input, experimental results, colloaborated with Jess on all papers related to the project
 
-Sydney    
+Sydney - Heavy Path Decomposition and Ordered Interleave algorithm, experimental results, colloaborated with Jess on all papers related to the project 
 
 
