@@ -18,7 +18,6 @@ preprocess_json.py
 Additional Files: 
 ---------------------  
 DAGDFS.java - Working example of DFS on example DAG in paper  
-metadata_simplified.json - The Amazon graph in a proper format
 
 Prerequisites: 
 ---------------------  
